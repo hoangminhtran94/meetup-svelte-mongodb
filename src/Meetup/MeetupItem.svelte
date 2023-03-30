@@ -3,7 +3,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import Badge from '../UI/Badge.svelte';
 	import meetups from '../Meetup/meetup-store';
-
+	import { fade } from 'svelte/transition';
 	//Props
 	export let id: string = '';
 	export let title: string = '';
@@ -20,7 +20,7 @@
 	};
 </script>
 
-<article>
+<article transition:fade>
 	<header>
 		<h1>
 			{title}

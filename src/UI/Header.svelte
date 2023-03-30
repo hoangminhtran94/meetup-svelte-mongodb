@@ -1,8 +1,8 @@
 <header>
 	<h1>Meet Us</h1>
-	<ul>
+	<!-- <ul>
 		<li><a href="/login">Login</a></li>
-	</ul>
+	</ul> -->
 </header>
 
 <style>
