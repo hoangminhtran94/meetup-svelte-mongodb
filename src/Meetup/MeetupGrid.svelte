@@ -1,29 +1,18 @@
 <script lang="ts">
 	import type { Meetup } from '../utils/model/Meetup.model';
 	import MeetupItem from './MeetupItem.svelte';
+	import { flip } from 'svelte/animate';
+	import { scale } from 'svelte/transition';
 	export let meetups: Meetup[] = [];
 	export let showFavorite: boolean = false;
 </script>
 
 <section>
-	{#each meetups as meetup, i (meetup.id)}
-		{#if showFavorite === true}
-			{#if meetup.isFavorite}
-				<MeetupItem
-					on:show-details
-					id={meetup.id}
-					title={meetup.title}
-					subtitle={meetup.subtitle}
-					imageUrl={meetup.imageUrl}
-					description={meetup.description}
-					address={meetup.address}
-					email={meetup.contactEmail}
-					isFavorite={meetup.isFavorite}
-				/>
-			{/if}
-		{:else}
+	{#each meetups as meetup (meetup.id)}
+		<div transition:scale animate:flip={{ duration: 300 }}>
 			<MeetupItem
 				on:show-details
+				on:edit-meetup
 				id={meetup.id}
 				title={meetup.title}
 				subtitle={meetup.subtitle}
@@ -33,7 +22,7 @@
 				email={meetup.contactEmail}
 				isFavorite={meetup.isFavorite}
 			/>
-		{/if}
+		</div>
 	{/each}
 </section>
 

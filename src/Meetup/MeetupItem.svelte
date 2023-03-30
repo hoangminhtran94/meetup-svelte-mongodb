@@ -3,7 +3,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import Badge from '../UI/Badge.svelte';
 	import meetups from '../Meetup/meetup-store';
-	import { fade } from 'svelte/transition';
+	import { scale } from 'svelte/transition';
 	//Props
 	export let id: string = '';
 	export let title: string = '';
@@ -20,8 +20,9 @@
 	};
 </script>
 
-<article transition:fade>
+<article transition:scale>
 	<header>
+		<span class="edit" on:click={() => dispatch('edit-meetup', { id })}>Edit</span>
 		<h1>
 			{title}
 			{#if isFavorite}
@@ -58,7 +59,19 @@
 		background: white;
 		margin: 1rem;
 	}
-
+	header {
+		position: relative;
+	}
+	.edit {
+		border: 1px solid #01a129;
+		background: #01a129;
+		color: white;
+		padding: 4px 8px;
+		border-radius: 8px;
+		position: absolute;
+		right: 5%;
+		cursor: pointer;
+	}
 	header,
 	.content,
 	footer {

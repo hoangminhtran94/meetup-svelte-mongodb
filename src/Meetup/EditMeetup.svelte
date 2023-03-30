@@ -2,22 +2,27 @@
 	import type { Meetup } from '../utils/model/Meetup.model';
 	import TextInput from '../UI/TextInput.svelte';
 	import Modal from '../UI/Modal.svelte';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onDestroy } from 'svelte';
 	import Button from '../UI/Button.svelte';
 	import { notEmpty, isEmail } from '../helpers/validation';
 	import meetups from '../Meetup/meetup-store';
-
 	const dispatch = createEventDispatcher();
+	export let id: string = '';
+	let meetup: Meetup | undefined;
+
+	const unsubscribe = meetups.subscribe((meetups) => {
+		meetup = meetups.find((meetup) => meetup.id === id);
+	});
 
 	let formData: Meetup = {
-		id: '',
-		title: '',
-		subtitle: '',
-		description: '',
-		imageUrl: '',
-		address: '',
-		contactEmail: '',
-		isFavorite: false
+		id: meetup ? meetup.id : '',
+		title: meetup ? meetup.title : '',
+		subtitle: meetup ? meetup.subtitle : '',
+		description: meetup ? meetup.description : '',
+		imageUrl: meetup ? meetup.imageUrl : '',
+		address: meetup ? meetup.address : '',
+		contactEmail: meetup ? meetup.contactEmail : '',
+		isFavorite: meetup ? meetup.isFavorite : false
 	};
 
 	$: titleIsValid = notEmpty(formData.title);
@@ -35,8 +40,12 @@
 		emailIsValid;
 
 	const saveHandler = () => {
+		if (!meetup) {
+			meetups.addMeetup(formData);
+		} else {
+			meetups.editAMeetup(formData);
+		}
 		dispatch('save');
-		meetups.addMeetup(formData);
 	};
 
 	const inputChangeHandler = (event: Event, field: string) => {
@@ -45,6 +54,14 @@
 			[field]: (event.target as HTMLInputElement | HTMLTextAreaElement).value
 		};
 	};
+	const deleteHandler = () => {
+		meetups.deleteAMeetup(id);
+		dispatch('save');
+	};
+
+	onDestroy(() => {
+		unsubscribe();
+	});
 </script>
 
 <Modal title="Add new meetup" on:cancel>
@@ -107,6 +124,9 @@
 				dispatch('cancel');
 			}}>Cancel</Button
 		>
+		{#if meetup}
+			<Button on:click={deleteHandler}>Delete</Button>
+		{/if}
 	</div>
 </Modal>
 
