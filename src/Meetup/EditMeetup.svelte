@@ -39,9 +39,32 @@
 		addressIsValid &&
 		emailIsValid;
 
-	const saveHandler = () => {
+	const saveHandler = async () => {
 		if (!meetup) {
-			meetups.addMeetup(formData);
+			let res;
+			try {
+				res = await fetch('http://localhost:5000/api/meetups', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						title: formData.title,
+						subtitle: formData.subtitle,
+						description: formData.description,
+						imageUrl: formData.imageUrl,
+						address: formData.address,
+						contactEmail: formData.contactEmail,
+						isFavorite: formData.isFavorite
+					})
+				});
+			} catch (error) {
+				return error;
+			}
+			if (res.ok) {
+				const meetup = await res.json();
+				meetups.addMeetup(meetup);
+			} else {
+				throw new Error('An error happened');
+			}
 		} else {
 			meetups.editAMeetup(formData);
 		}

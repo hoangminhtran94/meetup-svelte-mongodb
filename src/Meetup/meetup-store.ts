@@ -38,7 +38,7 @@ const meetups = writable([
 const createMeetupStore = {
 	subscribe: meetups.subscribe,
 	addMeetup: (formData: Meetup) => {
-		meetups.update((mus) => [{ ...formData, id: Math.random().toString() }, ...mus]);
+		meetups.update((mus) => [{ ...formData }, ...mus]);
 	},
 	editAMeetup: (formData: Meetup) => {
 		meetups.update((mus) => {
