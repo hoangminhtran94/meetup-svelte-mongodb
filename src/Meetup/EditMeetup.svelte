@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Meetup } from '../utils/model/Meetup.model';
+	import { toast } from '@zerodevx/svelte-toast';
 	import TextInput from '../UI/TextInput.svelte';
 	import Modal from '../UI/Modal.svelte';
 	import { createEventDispatcher, onDestroy } from 'svelte';
@@ -25,36 +26,33 @@
 		isFavorite: meetup ? meetup.isFavorite : false
 	};
 
+	let file: Blob | null = null;
+
 	$: titleIsValid = notEmpty(formData.title);
 	$: subtTitleIsValid = notEmpty(formData.subtitle);
 	$: descriptionIsValid = notEmpty(formData.description);
-	$: imageUrlIsValid = notEmpty(formData.imageUrl);
 	$: addressIsValid = notEmpty(formData.address);
 	$: emailIsValid = isEmail(formData.contactEmail);
 	$: formIsValid =
-		titleIsValid &&
-		subtTitleIsValid &&
-		descriptionIsValid &&
-		imageUrlIsValid &&
-		addressIsValid &&
-		emailIsValid;
+		titleIsValid && subtTitleIsValid && descriptionIsValid && addressIsValid && emailIsValid;
 
+	$: console.log(true.toString());
 	const saveHandler = async () => {
+		const submitData = new FormData();
+		submitData.append('title', formData.title);
+		submitData.append('subtitle', formData.subtitle);
+		submitData.append('description', formData.description);
+		submitData.append('image', file ?? '');
+		submitData.append('address', formData.address);
+		submitData.append('contactEmail', formData.contactEmail);
+		submitData.append('isFavorite', formData.isFavorite.toString());
 		if (!meetup) {
 			let res;
 			try {
 				res = await fetch('http://localhost:5000/api/meetups', {
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						title: formData.title,
-						subtitle: formData.subtitle,
-						description: formData.description,
-						imageUrl: formData.imageUrl,
-						address: formData.address,
-						contactEmail: formData.contactEmail,
-						isFavorite: formData.isFavorite
-					})
+					// headers: { 'Content-Type': 'multipart/form-data' },
+					body: submitData
 				});
 			} catch (error) {
 				return error;
@@ -66,22 +64,59 @@
 				throw new Error('An error happened');
 			}
 		} else {
-			meetups.editAMeetup(formData);
+			let res;
+			try {
+				res = await fetch(`http://localhost:5000/api/meetups/${formData.id}`, {
+					method: 'PUT',
+					body: submitData
+				});
+			} catch (error) {
+				console.log(error);
+			}
+			if (res?.ok) {
+				meetups.editAMeetup({
+					...formData,
+					imageUrl: file ? URL.createObjectURL(file) : formData.imageUrl
+				});
+				toast.push('Updated successfully', {
+					duration: 1500,
+					theme: {
+						'--toastBackground': 'white',
+						'--toastColor': '#143787',
+						'--toastBarBackground': '#143787',
+						'--toastBtnContent': '',
+						'--toastBorder': '1.5px solid #143787 '
+					}
+				});
+			}
 		}
 		dispatch('save');
 	};
-
 	const inputChangeHandler = (event: Event, field: string) => {
 		formData = {
 			...formData,
 			[field]: (event.target as HTMLInputElement | HTMLTextAreaElement).value
 		};
 	};
-	const deleteHandler = () => {
-		meetups.deleteAMeetup(id);
+	const deleteHandler = async () => {
+		let res;
+		try {
+			res = await fetch(`http://localhost:5000/api/meetups/${formData.id}`, {
+				method: 'DELETE'
+			});
+		} catch (error) {
+			console.log(error);
+		}
+		console.log(res);
+		if (res?.ok) {
+			meetups.deleteAMeetup(id);
+		}
+
 		dispatch('save');
 	};
-
+	const imageHandler = (event: Event) => {
+		file = (event.target as HTMLInputElement).files![0];
+	};
 	onDestroy(() => {
 		unsubscribe();
 	});
@@ -113,14 +148,22 @@
 			value={formData.address}
 			on:input={(event) => inputChangeHandler(event, 'address')}
 		/>
-		<TextInput
+		<label for="image">Images</label>
+		<input
+			id="image"
+			name="image"
+			type="file"
+			accept=".jpg,.jpeg,.png,.avif"
+			on:change={imageHandler}
+		/>
+		<!-- <TextInput
 			id="image"
 			validityMessage="Image Url is invalid"
 			valid={imageUrlIsValid}
 			label="Image URL"
 			value={formData.imageUrl}
 			on:input={(event) => inputChangeHandler(event, 'imageUrl')}
-		/>
+		/> -->
 		<TextInput
 			id="email"
 			validityMessage="Email is invalid"

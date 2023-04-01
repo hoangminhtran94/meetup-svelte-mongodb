@@ -15,8 +15,23 @@
 	export let isFavorite: boolean = false;
 
 	const dispatch = createEventDispatcher();
-	const favoriteHandler = () => {
-		meetups.toggleFavorite(id);
+	const favoriteHandler = async () => {
+		let res;
+		try {
+			res = await fetch(`http://localhost:5000/api/meetups/${id}`, {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					isFavorite: !isFavorite
+				})
+			});
+		} catch (error) {
+			console.log(error);
+		}
+		console.log(res);
+		if (res?.ok) {
+			meetups.toggleFavorite(id);
+		}
 	};
 </script>
 
@@ -33,7 +48,7 @@
 		<h1>{address}</h1>
 	</header>
 	<div class="image">
-		<img src={imageUrl} alt={title} />
+		<img src={`${imageUrl}`} alt={title} />
 	</div>
 	<div class="content">
 		<p>{description}</p>
@@ -77,7 +92,17 @@
 	footer {
 		padding: 1rem;
 	}
-
+	.content {
+		margin: 0 auto;
+		max-width: 90%;
+	}
+	.content p {
+		max-width: 100%;
+		text-align: start;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
 	.image {
 		width: 100%;
 		height: 14rem;
