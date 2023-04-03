@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition';
 </script>
 
-<span transition:slide>
+<span>
 	<slot />
 </span>
 

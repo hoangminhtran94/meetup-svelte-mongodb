@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let href: string | undefined = undefined;
 	export let type: 'button' | 'submit' = 'button';
-	export let mode: 'outline' | undefined = undefined;
+	export let mode: 'outline' | null = null;
 	export let color: string | null = null;
 	export let disabled: boolean = false;
 </script>
@@ -9,7 +9,7 @@
 {#if href}
 	<a {href}><slot /></a>
 {:else}
-	<button class="{mode} {color}" {type} on:click {disabled}>
+	<button class="{mode} {color} {$$restProps.class} " {type} on:click {disabled}>
 		<slot />
 	</button>
 {/if}
@@ -17,6 +17,9 @@
 <style>
 	button,
 	a {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		font: inherit;
 		border: 1px solid #cf0056;
 		background: #cf0056;

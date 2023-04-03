@@ -9,7 +9,7 @@ const createMeetupStore = {
 	setMeetups: (mups: Meetup[]) => {
 		meetups.set(mups);
 	},
-	editAMeetup: (formData: Meetup) => {
+	editAMeetup: (formData: any) => {
 		meetups.update((mus) => {
 			const musClone = [...mus];
 			const index = musClone.findIndex((mu) => mu.id === formData.id);

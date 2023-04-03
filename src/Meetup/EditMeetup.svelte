@@ -7,6 +7,8 @@
 	import Button from '../UI/Button.svelte';
 	import { notEmpty, isEmail } from '../helpers/validation';
 	import meetups from '../Meetup/meetup-store';
+	import authReducer from '../Auth/auth-store';
+	import ImageInput from '../UI/ImageInput.svelte';
 	const dispatch = createEventDispatcher();
 	export let id: string = '';
 	let meetup: Meetup | undefined;
@@ -15,14 +17,12 @@
 		meetup = meetups.find((meetup) => meetup.id === id);
 	});
 
-	let formData: Meetup = {
+	let formData = {
 		id: meetup ? meetup.id : '',
 		title: meetup ? meetup.title : '',
 		subtitle: meetup ? meetup.subtitle : '',
 		description: meetup ? meetup.description : '',
-		imageUrl: meetup ? meetup.imageUrl : '',
 		address: meetup ? meetup.address : '',
-		contactEmail: meetup ? meetup.contactEmail : '',
 		isFavorite: meetup ? meetup.isFavorite : false
 	};
 
@@ -32,11 +32,8 @@
 	$: subtTitleIsValid = notEmpty(formData.subtitle);
 	$: descriptionIsValid = notEmpty(formData.description);
 	$: addressIsValid = notEmpty(formData.address);
-	$: emailIsValid = isEmail(formData.contactEmail);
-	$: formIsValid =
-		titleIsValid && subtTitleIsValid && descriptionIsValid && addressIsValid && emailIsValid;
+	$: formIsValid = titleIsValid && subtTitleIsValid && descriptionIsValid && addressIsValid;
 
-	$: console.log(true.toString());
 	const saveHandler = async () => {
 		const submitData = new FormData();
 		submitData.append('title', formData.title);
@@ -44,14 +41,13 @@
 		submitData.append('description', formData.description);
 		submitData.append('image', file ?? '');
 		submitData.append('address', formData.address);
-		submitData.append('contactEmail', formData.contactEmail);
 		submitData.append('isFavorite', formData.isFavorite.toString());
 		if (!meetup) {
 			let res;
 			try {
 				res = await fetch('http://localhost:5000/api/meetups', {
 					method: 'POST',
-					// headers: { 'Content-Type': 'multipart/form-data' },
+					headers: { Authorization: `Bearer ${$authReducer.token}` },
 					body: submitData
 				});
 			} catch (error) {
@@ -59,7 +55,7 @@
 			}
 			if (res.ok) {
 				const meetup = await res.json();
-				meetups.addMeetup(meetup);
+				meetups.addMeetup({ ...meetup, imageUrl: 'http://localhost:5000/' + meetup.imageUrl });
 			} else {
 				throw new Error('An error happened');
 			}
@@ -68,15 +64,17 @@
 			try {
 				res = await fetch(`http://localhost:5000/api/meetups/${formData.id}`, {
 					method: 'PUT',
+					headers: { Authorization: `Bearer ${$authReducer.token}` },
 					body: submitData
 				});
 			} catch (error) {
-				console.log(error);
+				return error;
 			}
-			if (res?.ok) {
+			if (res.ok) {
 				meetups.editAMeetup({
 					...formData,
-					imageUrl: file ? URL.createObjectURL(file) : formData.imageUrl
+					createrId: meetup.createrId,
+					imageUrl: file ? URL.createObjectURL(file) : meetup.imageUrl
 				});
 				toast.push('Updated successfully', {
 					duration: 1500,
@@ -98,22 +96,7 @@
 			[field]: (event.target as HTMLInputElement | HTMLTextAreaElement).value
 		};
 	};
-	const deleteHandler = async () => {
-		let res;
-		try {
-			res = await fetch(`http://localhost:5000/api/meetups/${formData.id}`, {
-				method: 'DELETE'
-			});
-		} catch (error) {
-			console.log(error);
-		}
-		console.log(res);
-		if (res?.ok) {
-			meetups.deleteAMeetup(id);
-		}
 
-		dispatch('save');
-	};
 	const imageHandler = (event: Event) => {
 		file = (event.target as HTMLInputElement).files![0];
 	};
@@ -148,14 +131,7 @@
 			value={formData.address}
 			on:input={(event) => inputChangeHandler(event, 'address')}
 		/>
-		<label for="image">Images</label>
-		<input
-			id="image"
-			name="image"
-			type="file"
-			accept=".jpg,.jpeg,.png,.avif"
-			on:change={imageHandler}
-		/>
+
 		<!-- <TextInput
 			id="image"
 			validityMessage="Image Url is invalid"
@@ -165,15 +141,6 @@
 			on:input={(event) => inputChangeHandler(event, 'imageUrl')}
 		/> -->
 		<TextInput
-			id="email"
-			validityMessage="Email is invalid"
-			valid={emailIsValid}
-			label="Email"
-			type="email"
-			value={formData.contactEmail}
-			on:input={(event) => inputChangeHandler(event, 'contactEmail')}
-		/>
-		<TextInput
 			id="description"
 			validityMessage="Description is invalid"
 			valid={descriptionIsValid}
@@ -182,22 +149,29 @@
 			controlType="textarea"
 			on:input={(event) => inputChangeHandler(event, 'description')}
 		/>
+		<ImageInput
+			label="Meetup image"
+			image={meetup && !file ? meetup.imageUrl : file ? URL.createObjectURL(file) : ''}
+			on:input={imageHandler}
+		/>
 	</form>
-	<div slot="modal-footer">
+	<div slot="modal-footer" class="footer">
 		<Button disabled={!formIsValid} on:click={saveHandler}>Save</Button>
 		<Button
 			on:click={() => {
 				dispatch('cancel');
 			}}>Cancel</Button
 		>
-		{#if meetup}
-			<Button on:click={deleteHandler}>Delete</Button>
-		{/if}
 	</div>
 </Modal>
 
 <style>
 	form {
 		margin: auto;
+	}
+	.footer {
+		display: flex;
+		justify-content: center;
+		gap: 1rem;
 	}
 </style>

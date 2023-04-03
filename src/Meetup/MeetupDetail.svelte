@@ -4,6 +4,7 @@
 	import type { Meetup } from '../utils/model/Meetup.model';
 	import Button from '../UI/Button.svelte';
 	import Modal from '../UI/Modal.svelte';
+	import Map from '../UI/Map.svelte';
 	export let id: string = '';
 
 	let selectedMeetup: Meetup | undefined;
@@ -30,6 +31,8 @@
 				<h2>{selectedMeetup.subtitle} - {selectedMeetup.address}</h2>
 				<p>{selectedMeetup.description}</p>
 			</div>
+
+			<Map meetup={selectedMeetup} />
 		</section>
 		<div class="actions" slot="modal-footer">
 			<Button href="mailto:{selectedMeetup.contactEmail}">Contact</Button>
@@ -39,9 +42,6 @@
 {/if}
 
 <style>
-	section {
-	}
-
 	.image {
 		width: 100%;
 		height: 25rem;

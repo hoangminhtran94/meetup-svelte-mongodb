@@ -3,7 +3,7 @@
 	export let id: string;
 	export let label: string;
 	export let rows: number = 3;
-	export let value: string;
+	export let value: string = '';
 	export let type: 'text' | 'email' | 'number' | 'password' = 'text';
 	export let valid: boolean = true;
 	export let validityMessage: string = '';
@@ -16,6 +16,7 @@
 	{#if controlType === 'textarea'}
 		<textarea
 			class:invalid={!valid && touched}
+			name={id}
 			{rows}
 			{id}
 			{value}
@@ -27,6 +28,7 @@
 	{:else}
 		<input
 			class:invalid={!valid && touched}
+			name={id}
 			{type}
 			{id}
 			{value}
@@ -68,6 +70,8 @@
 		display: block;
 		margin-bottom: 0.5rem;
 		width: 100%;
+		font-size: 1.1rem;
+		font-weight: 800;
 	}
 
 	.form-control {

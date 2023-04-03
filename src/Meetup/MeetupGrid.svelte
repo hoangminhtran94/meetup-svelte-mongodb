@@ -1,31 +1,30 @@
 <script lang="ts">
 	import type { Meetup } from '../utils/model/Meetup.model';
 	import MeetupItem from './MeetupItem.svelte';
-	import { flip } from 'svelte/animate';
-	import { fade } from 'svelte/transition';
 	export let meetups: Meetup[] = [];
 	export let showFavorite: boolean = false;
+
+	$: currentMeetups = showFavorite ? meetups.filter((meetup) => meetup.isFavorite) : meetups;
 </script>
 
 <section>
-	{#if meetups.length === 0}
+	{#if currentMeetups.length === 0}
 		<p class="no-meetup">There are no meetup</p>
 	{:else}
-		{#each meetups as meetup (meetup.id)}
-			<div transition:fade animate:flip={{ duration: 300 }}>
-				<MeetupItem
-					on:show-details
-					on:edit-meetup
-					id={meetup.id}
-					title={meetup.title}
-					subtitle={meetup.subtitle}
-					imageUrl={meetup.imageUrl}
-					description={meetup.description}
-					address={meetup.address}
-					email={meetup.contactEmail}
-					isFavorite={meetup.isFavorite}
-				/>
-			</div>
+		{#each currentMeetups as meetup (meetup.id)}
+			<MeetupItem
+				on:show-details
+				on:edit-meetup
+				id={meetup.id}
+				title={meetup.title}
+				subtitle={meetup.subtitle}
+				imageUrl={meetup.imageUrl}
+				description={meetup.description}
+				address={meetup.address}
+				email={meetup.contactEmail}
+				isFavorite={meetup.isFavorite}
+				createrId={meetup.createrId}
+			/>
 		{/each}
 	{/if}
 </section>
@@ -48,7 +47,7 @@
 		}
 	}
 
-	@media (min-width: 1024px) {
+	@media (min-width: 1440px) {
 		section {
 			grid-template-columns: repeat(3, minmax(0, calc(33vw - 0.33rem)));
 		}

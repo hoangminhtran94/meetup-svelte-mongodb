@@ -6,5 +6,6 @@ export interface Meetup {
 	imageUrl: string;
 	address: string;
 	contactEmail: string;
+	createrId: string;
 	isFavorite: boolean;
 }
