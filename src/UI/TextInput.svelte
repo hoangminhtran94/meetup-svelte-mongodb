@@ -7,7 +7,6 @@
 	export let type: 'text' | 'email' | 'number' | 'password' = 'text';
 	export let valid: boolean = true;
 	export let validityMessage: string = '';
-
 	let touched = false;
 </script>
 
@@ -55,7 +54,7 @@
 		border: none;
 		border-bottom: 2px solid #ccc;
 		border-radius: 3px 3px 0 0;
-		background: white;
+		background: transparent;
 		padding: 0.15rem 0.25rem;
 		transition: border-color 0.1s ease-out;
 	}

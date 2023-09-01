@@ -8,9 +8,9 @@
 	};
 </script>
 
-<header>
-	<div><a href="/">Meet Us</a></div>
-	<ul class="navbar">
+<header class="  relative z-10 w-full py-3  flex justify-start items-center ">
+	<div class=" text-white font-bold text-lg px-10 flex-1"><a href="/">Meet Up</a></div>
+	<ul class=" mx-auto flex gap-4  py-2 px-10 flex-1 ">
 		<NavLink href="/meetups">Meetups</NavLink>
 		{#if $auth.user}
 			<NavLink href="/your-profile">{$auth.user.firstName + ' ' + $auth.user.lastName}</NavLink>
@@ -23,48 +23,4 @@
 </header>
 
 <style>
-	header {
-		position: relative;
-		z-index: 10;
-		width: 100%;
-		height: 4rem;
-		background: linear-gradient(
-			90deg,
-			rgba(170, 170, 170, 1) 0%,
-			rgba(120, 120, 120, 1) 20%,
-			rgba(0, 0, 0, 1) 100%
-		);
-		display: flex;
-		justify-self: flex-start;
-		align-items: center;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.26);
-	}
-
-	.navbar {
-		margin: 0 auto;
-		display: flex;
-		gap: 1rem;
-		justify-content: flex-end;
-	}
-	div {
-		width: 50%;
-		display: flex;
-		justify-content: flex-end;
-
-		margin: 0;
-	}
-	a {
-		font-size: xx-large;
-		font-weight: 600;
-		text-decoration: none;
-		color: white;
-	}
-	span {
-		font-size: 1.5em;
-		text-decoration: none;
-		font-weight: 800;
-		color: white;
-		opacity: 0.8;
-		cursor: pointer;
-	}
 </style>

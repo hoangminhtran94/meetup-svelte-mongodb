@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { Meetup } from '../utils/model/Meetup.model';
-	import { toast } from '@zerodevx/svelte-toast';
 	import TextInput from '../UI/TextInput.svelte';
 	import Modal from '../UI/Modal.svelte';
 	import { createEventDispatcher, onDestroy } from 'svelte';
@@ -75,16 +74,6 @@
 					...formData,
 					createrId: meetup.createrId,
 					imageUrl: file ? URL.createObjectURL(file) : meetup.imageUrl
-				});
-				toast.push('Updated successfully', {
-					duration: 1500,
-					theme: {
-						'--toastBackground': 'white',
-						'--toastColor': '#143787',
-						'--toastBarBackground': '#143787',
-						'--toastBtnContent': '',
-						'--toastBorder': '1.5px solid #143787 '
-					}
 				});
 			}
 		}

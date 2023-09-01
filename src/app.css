@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+	.nav-link {
+		@apply text-white text-center  tracking-wider relative px-2 py-1 hover:scale-105 transition-all;
+	}
+	.nav-link.active {
+		@apply font-bold before:content-[""] before:bg-white before:h-[1px] before:absolute before:top-full before:w-[70%] before:left-[15%];
+	}
+}
 * {
 	font-family: 'Roboto Slab', serif;
 	box-sizing: border-box;

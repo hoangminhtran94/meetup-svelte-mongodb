@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from '../../UI/Button.svelte';
 	import TextInput from '../../UI/TextInput.svelte';
+	import { enhance } from '$app/forms';
 	import authReducer from '../../Auth/auth-store';
 	import { goto } from '$app/navigation';
 	import ImageInput from '../../UI/ImageInput.svelte';
@@ -15,7 +16,6 @@
 		address: ''
 	};
 	let file: Blob | null = null;
-	$: console.log(formData);
 	const inputHandler = (e: Event) => {
 		const currentTarget = e.target as HTMLInputElement;
 		formData = { ...formData, [currentTarget.name]: currentTarget.value };
@@ -60,10 +60,15 @@
 	<title>Register</title>
 </svelte:head>
 
-<div class="login-container">
-	<h1>Create an account</h1>
-	<form on:submit|preventDefault={submitHandler}>
-		{#if currentPage === 1}
+<div class="w-1/2 mx-auto  text-white">
+	<form
+		class="rounded border-indigo-950 p-10 border-[3px]"
+		method="post"
+		use:enhance
+		action="?/register"
+	>
+		<h1 class="text-2xl font-bold mb-5">Create an account</h1>
+		<div class:hidden={currentPage === 2}>
 			<TextInput label="Username or Email" id="email" on:input={inputHandler} />
 
 			<TextInput label="Password" type="password" id="password" on:input={inputHandler} />
@@ -80,7 +85,8 @@
 				}}
 				class="w-1-3 mx-auto">Next</Button
 			>
-		{:else}
+		</div>
+		<div class:hidden={currentPage === 1}>
 			<ImageInput image={file ? URL.createObjectURL(file) : ''} on:input={imageSelectionHandler} />
 			<TextInput label="First name" id="firstName" on:input={inputHandler} />
 			<TextInput label="Last name" id="lastName" on:input={inputHandler} />
@@ -97,7 +103,7 @@
 				>
 				<Button type="submit" class="w-1-3 ">Register</Button>
 			</div>
-		{/if}
+		</div>
 
 		<p class="mx-auto ">
 			Already have an account? <a href="/login" class="no-decoration">Login now</a>
@@ -109,13 +115,7 @@
 	h1 {
 		text-align: center;
 	}
-	.login-container {
-		width: 95%;
-		margin: 0 auto;
-		margin-top: 1rem;
-		padding: 2rem;
-		box-shadow: 2px 4px 10px 2px rgba(0, 0, 0, 0.1);
-	}
+
 	.register-actions {
 		display: flex;
 		justify-content: center;
