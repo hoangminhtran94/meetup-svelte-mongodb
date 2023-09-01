@@ -11,6 +11,7 @@
 <header>
 	<div><a href="/">Meet Us</a></div>
 	<ul class="navbar">
+		<NavLink href="/meetups">Meetups</NavLink>
 		{#if $auth.user}
 			<NavLink href="/your-profile">{$auth.user.firstName + ' ' + $auth.user.lastName}</NavLink>
 			<span on:click={logoutHandler} on:keydown={logoutHandler}>Logout</span>

@@ -1,5 +1,6 @@
 <script context="module">
 	import { browser } from '$app/environment';
+	import '../app.css';
 	import authReducer from '../Auth/auth-store';
 	if (browser) {
 		const persistedToken = localStorage.getItem('login-token');
@@ -23,7 +24,7 @@
 	<Header />
 	<SvelteToast />
 	<main>
-		<slot />
+		<slot/>
 	</main>
 </div>
 
