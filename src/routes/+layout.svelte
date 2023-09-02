@@ -20,7 +20,7 @@
 
 <div class="min-h-screen bg-[#001220] relative z-10 flex flex-col">
 	<Header />
-	<main class="relative  flex-1">
+	<main class="relative flex-1">
 		<slot />
 	</main>
 </div>

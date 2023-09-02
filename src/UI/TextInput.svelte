@@ -10,8 +10,7 @@
 	let touched = false;
 </script>
 
-<div class="form-control">
-	<label for={id}>{label}</label>
+<div class="relative">
 	{#if controlType === 'textarea'}
 		<textarea
 			class:invalid={!valid && touched}
@@ -26,16 +25,25 @@
 		/>
 	{:else}
 		<input
-			class:invalid={!valid && touched}
-			name={id}
 			{type}
 			{id}
 			{value}
+			name={id}
 			on:input
 			on:blur={() => {
 				touched = true;
 			}}
+			class="block  px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900
+			 bg-[rgba(59,130,246,0.05)] dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none
+			  dark:text-white dark:border-gray-600
+			   dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+			placeholder=" "
 		/>
+		<label
+			for={id}
+			class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
+			>{label}</label
+		>
 	{/if}
 
 	{#if validityMessage && !valid && touched}
@@ -43,41 +51,7 @@
 	{/if}
 </div>
 
-<div />
-
 <style>
-	input,
-	textarea {
-		display: block;
-		width: 100%;
-		font: inherit;
-		border: none;
-		border-bottom: 2px solid #ccc;
-		border-radius: 3px 3px 0 0;
-		background: transparent;
-		padding: 0.15rem 0.25rem;
-		transition: border-color 0.1s ease-out;
-	}
-
-	input:focus,
-	textarea:focus {
-		border-color: #e40763;
-		outline: none;
-	}
-
-	label {
-		display: block;
-		margin-bottom: 0.5rem;
-		width: 100%;
-		font-size: 1.1rem;
-		font-weight: 800;
-	}
-
-	.form-control {
-		padding: 0.5rem 0;
-		width: 100%;
-		margin: 0.25rem 0;
-	}
 	.invalid {
 		border-color: red;
 		background: #fde3e3;

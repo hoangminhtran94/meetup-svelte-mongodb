@@ -2,58 +2,8 @@
 	import Button from '../../UI/Button.svelte';
 	import TextInput from '../../UI/TextInput.svelte';
 	import { enhance } from '$app/forms';
-	import authReducer from '../../Auth/auth-store';
-	import { goto } from '$app/navigation';
 	import ImageInput from '../../UI/ImageInput.svelte';
 	let currentPage = 1;
-	let formData = {
-		email: '',
-		password: '',
-		confirmPassword: '',
-		firstName: '',
-		lastName: '',
-		phone: '',
-		address: ''
-	};
-	let file: Blob | null = null;
-	const inputHandler = (e: Event) => {
-		const currentTarget = e.target as HTMLInputElement;
-		formData = { ...formData, [currentTarget.name]: currentTarget.value };
-	};
-	const imageSelectionHandler = (e: Event) => {
-		file = (e.target as HTMLInputElement).files![0];
-	};
-	const submitHandler = async () => {
-		let res;
-		const submitData = new FormData();
-		submitData.append('email', formData.email);
-		submitData.append('password', formData.password);
-		submitData.append('firstName', formData.firstName);
-		submitData.append('lastName', formData.lastName);
-		submitData.append('phone', formData.phone);
-		submitData.append('address', formData.address);
-		submitData.append('image', file ?? '');
-		try {
-			res = await fetch('http://localhost:5000/api/auth/register', {
-				method: 'POST',
-				body: submitData
-			});
-		} catch (error) {
-			console.log(error);
-		}
-
-		if (res?.ok) {
-			try {
-				const { token, ...userData } = await res.json();
-				localStorage.setItem('login-token', JSON.stringify({ ...userData, token }));
-				authReducer.setToken(token);
-				authReducer.setUser(userData);
-				goto('/');
-			} catch (error) {
-				console.log(error);
-			}
-		}
-	};
 </script>
 
 <svelte:head>
@@ -64,44 +14,44 @@
 	<form
 		class="rounded border-indigo-950 p-10 border-[3px]"
 		method="post"
-		use:enhance
+		use:enhance={() => {
+			return ({ result }) => {
+				console.log(result);
+			};
+		}}
 		action="?/register"
 	>
 		<h1 class="text-2xl font-bold mb-5">Create an account</h1>
-		<div class:hidden={currentPage === 2}>
-			<TextInput label="Username or Email" id="email" on:input={inputHandler} />
-
-			<TextInput label="Password" type="password" id="password" on:input={inputHandler} />
-			<TextInput
-				label="Confirm Password"
-				type="password"
-				id="confirmPassword"
-				on:input={inputHandler}
-			/>
+		<div class="flex flex-col gap-5" class:hidden={currentPage === 2}>
+			<TextInput label="Username or Email" id="email" />
+			<TextInput label="Password" type="password" id="password" />
+			<TextInput label="Confirm Password" type="password" id="confirmPassword" />
 			<Button
 				type="button"
 				on:click={() => {
 					currentPage = 2;
 				}}
-				class="w-1-3 mx-auto">Next</Button
+				class="w-1-3 mx-auto !mt-10">Next</Button
 			>
 		</div>
-		<div class:hidden={currentPage === 1}>
-			<ImageInput image={file ? URL.createObjectURL(file) : ''} on:input={imageSelectionHandler} />
-			<TextInput label="First name" id="firstName" on:input={inputHandler} />
-			<TextInput label="Last name" id="lastName" on:input={inputHandler} />
-			<TextInput label="Phone number" id="phone" on:input={inputHandler} />
-			<TextInput label="Address" id="address" on:input={inputHandler} />
-			<div class="register-actions">
-				<Button
-					type="button"
-					mode="outline"
-					class="w-1-3"
-					on:click={() => {
-						currentPage = 1;
-					}}>Previous page</Button
-				>
-				<Button type="submit" class="w-1-3 ">Register</Button>
+		<div class="flex  gap-10" class:hidden={currentPage === 1}>
+			<ImageInput name="profile-image" />
+			<div class="flex-1 flex flex-col gap-5">
+				<TextInput label="First name" id="firstName" />
+				<TextInput label="Last name" id="lastName" />
+				<TextInput label="Phone number" id="phone" />
+				<TextInput label="Address" id="address" />
+				<div class="register-actions mt-10">
+					<Button
+						type="button"
+						mode="btn-alert-outline"
+						class="w-1-3"
+						on:click={() => {
+							currentPage = 1;
+						}}>Previous page</Button
+					>
+					<Button mode="btn-purple" type="submit" class="w-1-3 ">Register</Button>
+				</div>
 			</div>
 		</div>
 

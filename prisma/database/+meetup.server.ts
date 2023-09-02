@@ -1,3 +1,4 @@
+import { fail } from '@sveltejs/kit';
 import { prisma } from './+db.server';
 
 export const getMeetups = async () => {
@@ -10,23 +11,20 @@ export const getMeetups = async () => {
 };
 
 export const addMeetup = async (data: any) => {
-	try {
-		return await prisma.meetup.create({
-			data: {
-				title: data.title,
-				subtitle: data.subtitle,
-				description: data.description,
-				imageUrl: data.imageUrl,
-				address: data.address,
-				createrId: data.createrId,
-				contactEmail: data.contactEmail,
-				isFavorite: data.isFavorite
-			}
-		});
-	} catch (error) {
-		console.log(error);
-		throw error;
-	}
+
+	return await prisma.meetup.create({
+		data: {
+			title: data.title,
+			subtitle: data.subtitle,
+			description: data.description,
+			imageUrl: data.imageUrl,
+			address: data.address,
+			createrId: data.createrId,
+			contactEmail: data.contactEmail,
+			isFavorite: data.isFavorite
+		}
+	});
+
 };
 
 export const getAMeetUp = async (id: string) => {
