@@ -6,6 +6,7 @@ import { v4 } from "uuid"
 import { hashSync } from "bcrypt"
 import { prisma } from '../../../prisma/database/+db.server';
 import { fail } from '@sveltejs/kit';
+
 export const prerender = false
 export const load = (async () => {
     return {};

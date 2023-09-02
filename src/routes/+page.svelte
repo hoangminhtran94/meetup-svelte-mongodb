@@ -1,11 +1,11 @@
-<script>
+<script lang="ts">
 </script>
 
 <div class=" text-white h-[300px] flex justify-center items-center">
 	<h1 class="text-2xl">Let's meet new friend</h1>
 	<div />
 </div>
-<div class="absolute bottom-0 w-full  -z-10  ">
+<div class="absolute bottom-0 w-full -z-10">
 	<svg
 		id="visual"
 		viewBox="0 0 900 600"

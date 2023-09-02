@@ -1,7 +1,6 @@
 import { writable } from 'svelte/store';
-import type { User } from './../utils/model/User.model';
 
-const authStore = writable<{ token: string | null; user: User | null }>({
+const authStore = writable<{ token: string | null; user: { email: string, id: string } | null }>({
 	token: null,
 	user: null
 });
@@ -13,7 +12,7 @@ const authReducer = {
 			return { ...currentState, token: token };
 		});
 	},
-	setUser: (user: User) => {
+	setUser: (user: { email: string, id: string }) => {
 		authStore.update((currentState) => {
 			return { ...currentState, user: user };
 		});
