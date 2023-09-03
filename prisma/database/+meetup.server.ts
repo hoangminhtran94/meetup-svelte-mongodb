@@ -1,16 +1,14 @@
-import { fail } from '@sveltejs/kit';
+
 import { prisma } from './+db.server';
+import type { Meetup } from '@prisma/client';
 
 export const getMeetups = async () => {
-	try {
-		return await prisma.meetup.findMany();
-	} catch (error) {
-		console.log(error);
-		throw error;
-	}
+
+	return await prisma.meetup.findMany();
+
 };
 
-export const addMeetup = async (data: any) => {
+export const addMeetup = async (data: Meetup) => {
 
 	return await prisma.meetup.create({
 		data: {
@@ -28,15 +26,11 @@ export const addMeetup = async (data: any) => {
 };
 
 export const getAMeetUp = async (id: string) => {
-	try {
-		return await prisma.meetup.findFirst({ where: { id } });
-	} catch (error) {
-		console.log(error);
-		throw error;
-	}
+
+	return await prisma.meetup.findFirstOrThrow({ where: { id } });
 };
 
-export const updateMeetup = async (id: string, data: any) => {
+export const updateMeetup = async (id: string, data: Meetup) => {
 	try {
 		await prisma.meetup.update({ where: { id }, data: { ...data } });
 	} catch (error) {

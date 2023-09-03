@@ -9,12 +9,24 @@
 	};
 </script>
 
-<header class="  relative z-10 w-full py-3 flex justify-start items-center">
-	<div class=" text-white font-bold text-lg px-10 flex-1"><a href="/">Meet Up</a></div>
-	<ul class=" mx-auto flex gap-4 py-2 px-10 flex-1">
+<header
+	class="  relative z-10 w-[150px] py-3 bg-slate-800 px-5 flex flex-col justify-start items-center"
+>
+	<div class=" text-white font-bold text-lg"><a href="/">Meet Up</a></div>
+	<nav class=" w-full flex flex-col items-center gap-4 flex-1">
 		<NavLink href="/meetups">Meetups</NavLink>
 		{#if $page.data.user}
-			<NavLink href="/your-profile">{$page.data.user.email}</NavLink>
+			<NavLink href="/your-profile">
+				<div class="w-[30px] h-[30px]">
+					<img
+						width="30"
+						height="30"
+						class="w-full h-full object-cover rounded-full"
+						alt="profile-image"
+						src={$page.data.user.profileImage}
+					/>
+				</div>
+			</NavLink>
 			<span
 				class="text-white flex items-center cursor-pointer"
 				on:click={logoutHandler}
@@ -24,7 +36,7 @@
 			<NavLink href="/login">Login</NavLink>
 			<NavLink href="/register">Register</NavLink>
 		{/if}
-	</ul>
+	</nav>
 </header>
 
 <style>

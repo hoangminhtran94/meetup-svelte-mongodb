@@ -4,7 +4,7 @@
 	$: active = $page.url.pathname === href;
 </script>
 
-<li class={`nav-link ${active && 'active'}`}><a {href}><slot /></a></li>
+<div class={`nav-link ${active && 'active'}`}><a {href}><slot /></a></div>
 
 <style>
 </style>

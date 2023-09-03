@@ -18,7 +18,7 @@
 	import '../app.css';
 </script>
 
-<div class="min-h-screen bg-[#001220] relative z-10 flex flex-col">
+<div class="min-h-screen bg-[#001220] relative z-10 flex">
 	<Header />
 	<main class="relative flex-1">
 		<slot />

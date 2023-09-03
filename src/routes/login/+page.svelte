@@ -5,6 +5,7 @@
 	import cookies from 'js-cookie';
 	import type { ActionResult } from '@sveltejs/kit';
 	import authReducer from '../../Auth/auth-store';
+	import { goto } from '$app/navigation';
 
 	const resultHandler = () => {
 		return ({ result }: { result: ActionResult }) => {
@@ -12,6 +13,7 @@
 				const data = result.data as { email: string; id: string; jwt_token: string };
 				cookies.set('jwt_token', data.jwt_token);
 				authReducer.setUser({ email: data.email, id: data.id });
+				goto('/meetups', { invalidateAll: true });
 			}
 		};
 	};
