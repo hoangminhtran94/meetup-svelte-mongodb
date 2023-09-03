@@ -7,10 +7,12 @@
 	$: currentMeetups = showFavorite ? meetups.filter((meetup) => meetup.isFavorite) : meetups;
 </script>
 
-<section>
-	{#if currentMeetups.length === 0}
-		<p class="no-meetup">There are no meetup</p>
-	{:else}
+{#if currentMeetups.length === 0}
+	<div class="no-meetup text-white text-center text-xl flex-1 flex items-center justify-center">
+		There are no meetup
+	</div>
+{:else}
+	<section class="">
 		{#each currentMeetups as meetup (meetup.id)}
 			<MeetupItem
 				on:show-details
@@ -26,17 +28,17 @@
 				createrId={meetup.createrId}
 			/>
 		{/each}
-	{/if}
-</section>
+	</section>
+{/if}
 
 <style>
 	.no-meetup {
+		font-family: 'Starborn', sans-serif;
 		margin: 1rem;
 	}
 	section {
 		width: 100%;
 		display: grid;
-
 		grid-template-columns: repeat(1, minmax(0, 100vw));
 		grid-gap: 1rem;
 	}

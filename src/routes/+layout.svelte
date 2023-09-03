@@ -1,4 +1,4 @@
-<script context="module">
+<!-- <script context="module">
 	import { browser } from '$app/environment';
 	import '../app.css';
 	import authReducer from '../Auth/auth-store';
@@ -11,17 +11,24 @@
 			authReducer.setToken(token);
 		}
 	}
-</script>
+</script> -->
 
 <script lang="ts">
 	import Header from '../UI/Header.svelte';
+	import { page } from '$app/stores';
 	import '../app.css';
+	import FooterImage from '../UI/FooterImage.svelte';
+
+	$: path = $page.url.pathname;
+
+	$: console.log(path);
 </script>
 
 <div class="min-h-screen bg-[#001220] relative z-10 flex">
 	<Header />
-	<main class="relative flex-1">
+	<main class="relative flex flex-col flex-1 py-10">
 		<slot />
+		<FooterImage />
 	</main>
 </div>
 

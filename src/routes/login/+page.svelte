@@ -36,12 +36,9 @@
 			<TextInput label="Username/Email" id="email" />
 			<TextInput label="Password" type="password" id="password" />
 		</div>
-		<Button type="submit" class="w-1-3 mx-auto !mt-10">Login</Button>
+		<Button type="submit" className="w-1-3 mx-auto !mt-10">Login</Button>
 		<p class="mx-auto text-xs">
 			Don't have an account? <a href="/register" class="no-decoration">Register now</a>
 		</p>
 	</form>
 </div>
-
-<style>
-</style>

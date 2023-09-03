@@ -9,25 +9,18 @@
 <div
 	transition:fade
 	class="modal-backdrop"
-	on:click={() => {}}
+	on:click={() => {
+		dispatch('cancel');
+	}}
 	on:keydown={() => {
 		dispatch('cancel');
 	}}
 />
-<div transition:fly={{ y: 300 }} class="modal">
+<div transition:fly={{ y: 300 }} class="modal text-white">
 	<h1>{title}</h1>
 	<div class="content">
 		<slot name="modal-content" />
 	</div>
-	<footer>
-		<slot name="modal-footer">
-			<Button
-				on:click={() => {
-					dispatch('cancel');
-				}}>Close</Button
-			>
-		</slot>
-	</footer>
 </div>
 
 <style>
@@ -43,15 +36,18 @@
 
 	.modal {
 		position: fixed;
+		background-image: url('/new-post.svg');
+		background-repeat: no-repeat;
+		background-size: cover;
+
 		top: 10vh;
 		left: 10%;
 		width: 80%;
 		max-height: 80vh;
-		background: white;
 		border-radius: 5px;
 		z-index: 100;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-		overflow: scroll;
+		box-shadow: 0 0px 50px rgba(255, 255, 255, 0.2);
+		overflow: auto;
 	}
 
 	h1 {

@@ -36,7 +36,7 @@
 		</section>
 		<div class="actions" slot="modal-footer">
 			<Button href="mailto:{selectedMeetup.contactEmail}">Contact</Button>
-			<Button type="button" mode="outline" on:click={() => dispatch('close')}>Close</Button>
+			<Button type="button" mode="btn-error" on:click={() => dispatch('close')}>Close</Button>
 		</div>
 	</Modal>
 {/if}

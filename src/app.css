@@ -4,10 +4,11 @@
 
 @layer components {
 	.nav-link {
-		@apply text-white text-center  tracking-wider relative px-2 py-1 hover:scale-105 transition-all;
+		@apply text-white text-center w-full  rounded-lg tracking-wider text-xs relative px-2 py-2 hover:scale-105 transition-all;
 	}
 	.nav-link.active {
-		@apply font-bold before:content-[""] before:bg-white before:h-[1px] before:absolute before:top-full before:w-[70%] before:left-[15%];
+		/* @apply font-bold before:content-[""] before:bg-white before:h-[1px] before:absolute before:top-full before:w-[70%] before:left-[15%]; */
+		@apply outline outline-1 outline-white;
 	}
 	.home-page {
 		@apply before:content-[""] h-[100px];
@@ -38,7 +39,7 @@
 	}
 }
 * {
-	font-family: 'Roboto Slab', serif;
+	font-family: 'Poppins', sans-serif;
 	box-sizing: border-box;
 }
 
