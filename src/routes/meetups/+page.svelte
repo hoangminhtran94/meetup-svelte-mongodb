@@ -2,17 +2,18 @@
 	import MeetupGrid from '../../Meetup/MeetupGrid.svelte';
 	import EditMeetup from '../../Meetup/EditMeetup.svelte';
 	import Button from '../../UI/Button.svelte';
-	import meetups from '../../Meetup/meetup-store';
+	import type { PageData } from './$types';
 	import MeetupDetail from '../../Meetup/MeetupDetail.svelte';
 	import { page } from '$app/stores';
+	import type { Meetup } from '@prisma/client';
 	$: user = $page.data.user;
 	// meetups.setMeetups(data.meetups);
+	export let data: PageData;
 
 	let showFavorite: boolean = false;
-
 	let editMode: 'add' | 'edit' | null = null;
 	let showDetails: boolean = false;
-	let currentSelected: string = '';
+	let currentSelected: Meetup | null;
 </script>
 
 <svelte:head>
@@ -62,10 +63,10 @@
 
 	<MeetupGrid
 		{showFavorite}
-		meetups={$meetups}
+		meetups={data.meetups}
 		on:edit-meetup={(e) => {
 			editMode = 'edit';
-			currentSelected = e.detail.id;
+			currentSelected = e.detail.currentMeetup;
 		}}
 		on:show-details={(e) => {
 			showDetails = !showDetails;
@@ -76,9 +77,8 @@
 	<!-- Modals -->
 	{#if currentSelected && showDetails}
 		<MeetupDetail
-			id={currentSelected}
 			on:close={() => {
-				currentSelected = '';
+				currentSelected = null;
 				showDetails = false;
 			}}
 		/>
@@ -96,7 +96,7 @@
 	{/if}
 	{#if editMode === 'edit'}
 		<EditMeetup
-			id={currentSelected}
+			meetup={currentSelected}
 			on:save={() => {
 				editMode = null;
 			}}

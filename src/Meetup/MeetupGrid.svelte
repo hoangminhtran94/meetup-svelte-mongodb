@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Meetup } from '../utils/model/Meetup.model';
+	import type { Meetup } from '@prisma/client';
 	import MeetupItem from './MeetupItem.svelte';
 	export let meetups: Meetup[] = [];
 	export let showFavorite: boolean = false;
@@ -12,21 +12,9 @@
 		There are no meetup
 	</div>
 {:else}
-	<section class="">
+	<section class=" p-10">
 		{#each currentMeetups as meetup (meetup.id)}
-			<MeetupItem
-				on:show-details
-				on:edit-meetup
-				id={meetup.id}
-				title={meetup.title}
-				subtitle={meetup.subtitle}
-				imageUrl={meetup.imageUrl}
-				description={meetup.description}
-				address={meetup.address}
-				email={meetup.contactEmail}
-				isFavorite={meetup.isFavorite}
-				createrId={meetup.createrId}
-			/>
+			<MeetupItem on:show-details on:edit-meetup {meetup} />
 		{/each}
 	</section>
 {/if}

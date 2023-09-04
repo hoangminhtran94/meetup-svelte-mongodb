@@ -1,8 +1,9 @@
 <script lang="ts">
 	export let name = '';
 	export let label = '';
+	export let defaultImage = '';
 	let file: File | null = null;
-	$: image = file ? URL.createObjectURL(file) : '';
+	$: image = file ? URL.createObjectURL(file) : defaultImage;
 </script>
 
 <div class="flex flex-col items-center text-xs">

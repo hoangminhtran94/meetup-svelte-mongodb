@@ -11,16 +11,15 @@ datasource db {
 }
 
 model Meetup {
-  id           String  @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
-  subtitle     String
-  description  String
-  imageUrl     String
-  address      String
-  contactEmail String
-  isFavorite   Boolean
-  createrId    String  @db.ObjectId
-  user         User    @relation(fields: [createrId], references: [id])
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  subtitle    String
+  description String
+  address     String
+  imageUrl    String
+  isFavorite  Boolean
+  createrId   String  @db.ObjectId
+  user        User    @relation(fields: [createrId], references: [id])
 }
 
 model User {

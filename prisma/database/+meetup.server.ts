@@ -1,26 +1,34 @@
 
 import { prisma } from './+db.server';
 import type { Meetup } from '@prisma/client';
+export interface MeetupCreateArgs {
+	title: string,
+	subtitle: string,
+	description: string
+	imageUrl: string
+	address: string
+	createrId: string
+	isFavorite: boolean
 
+}
 export const getMeetups = async () => {
 
 	return await prisma.meetup.findMany();
 
 };
 
-export const addMeetup = async (data: Meetup) => {
+export const addMeetup = async (data: MeetupCreateArgs) => {
 
 	return await prisma.meetup.create({
 		data: {
 			title: data.title,
 			subtitle: data.subtitle,
 			description: data.description,
-			imageUrl: data.imageUrl,
 			address: data.address,
-			createrId: data.createrId,
-			contactEmail: data.contactEmail,
-			isFavorite: data.isFavorite
-		}
+			imageUrl: data.imageUrl,
+			isFavorite: data.isFavorite,
+			user: { connect: { id: data.createrId } }
+		},
 	});
 
 };

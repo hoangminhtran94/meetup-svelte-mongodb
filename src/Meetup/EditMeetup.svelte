@@ -1,43 +1,56 @@
 <script lang="ts">
-	import type { Meetup } from '../utils/model/Meetup.model';
+	import type { Meetup } from '@prisma/client';
 	import TextInput from '../UI/TextInput.svelte';
 	import Modal from '../UI/Modal.svelte';
-	import { createEventDispatcher, onDestroy } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 	import Button from '../UI/Button.svelte';
-	import { notEmpty, isEmail } from '../helpers/validation';
+	import { notEmpty } from '../helpers/validation';
 	import ImageInput from '../UI/ImageInput.svelte';
+	import { enhance } from '$app/forms';
 	const dispatch = createEventDispatcher();
-	export let id: string = '';
-	let meetup: Meetup | undefined;
+	export let meetup: Meetup | null = null;
+	let formValid = {};
+	const invalidHandler = (e: CustomEvent) => {
+		formValid = { ...formValid, ...e.detail };
+	};
+	$: disabled = Object.values(formValid).length === 0 || Object.values(formValid).includes(false);
 </script>
 
 <Modal title="Add new meetup" on:cancel>
-	<form class="flex flex-col gap-5" slot="modal-content">
-		<ImageInput name="meetup-image" />
+	<form class="flex flex-col gap-5" use:enhance method="post" slot="modal-content">
+		<ImageInput defaultImage={meetup?.imageUrl} name="meetupImage" />
 		<TextInput
+			value={meetup?.title}
 			validCondition={notEmpty}
 			id="title"
 			validityMessage="Title is invalid"
 			label="Title"
+			on:validity={invalidHandler}
 		/>
 		<TextInput
+			value={meetup?.subtitle}
 			validCondition={notEmpty}
 			id="subtitle"
 			validityMessage="Subtitle is invalid"
 			label="Subtitle"
+			on:validity={invalidHandler}
 		/>
 		<TextInput
+			value={meetup?.address}
 			validCondition={notEmpty}
 			id="address"
 			validityMessage="Address is invalid"
 			label="Address"
+			on:validity={invalidHandler}
 		/>
 		<TextInput
+			value={meetup?.description}
 			id="description"
 			validCondition={notEmpty}
 			validityMessage="description is invalid"
 			label="Description"
 			controlType="textarea"
+			on:validity={invalidHandler}
 		/>
 		<div class="flex gap-4 justify-center">
 			<Button
@@ -46,7 +59,7 @@
 					dispatch('cancel');
 				}}>Cancel</Button
 			>
-			<Button mode="btn-success">Save</Button>
+			<Button {disabled} type="submit" mode="btn-success">Save</Button>
 		</div>
 	</form>
 </Modal>

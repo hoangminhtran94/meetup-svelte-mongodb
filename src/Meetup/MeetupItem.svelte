@@ -3,55 +3,28 @@
 	import { createEventDispatcher } from 'svelte';
 	import Badge from '../UI/Badge.svelte';
 	import meetups from '../Meetup/meetup-store';
-	import authReducer from '../Auth/auth-store';
+	import { page } from '$app/stores';
+	import type { Meetup } from '@prisma/client';
 
 	//Props
-	export let id: string = '';
-	export let title: string = '';
-	export let subtitle: string = '';
-	export let imageUrl: string = '';
-	export let description: string = '';
-	export let address: string = '';
-	export let email: string = '';
-	export let isFavorite: boolean = false;
-	export let createrId: string = '';
+	export let meetup: Meetup;
 
 	const dispatch = createEventDispatcher();
-	const favoriteHandler = async () => {
-		let res;
-		try {
-			res = await fetch(`http://localhost:5000/api/meetups/${id}`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${$authReducer.token}`
-				},
-				body: JSON.stringify({
-					isFavorite: !isFavorite
-				})
-			});
-		} catch (error) {
-			console.log(error);
-		}
-		console.log(res);
-		if (res?.ok) {
-			meetups.toggleFavorite(id);
-		}
-	};
+	const favoriteHandler = async () => {};
 	const deleteHandler = async () => {
 		let res;
-		try {
-			res = await fetch(`http://localhost:5000/api/meetups/${id}`, {
-				method: 'DELETE',
-				headers: { Authorization: `Bearer ${$authReducer.token}` }
-			});
-		} catch (error) {
-			console.log(error);
-		}
-		console.log(res);
-		if (res?.ok) {
-			meetups.deleteAMeetup(id);
-		}
+		// try {
+		// 	res = await fetch(`http://localhost:5000/api/meetups/${id}`, {
+		// 		method: 'DELETE',
+		// 		headers: { Authorization: `Bearer ${$authReducer.token}` }
+		// 	});
+		// } catch (error) {
+		// 	console.log(error);
+		// }
+		// console.log(res);
+		// if (res?.ok) {
+		// 	meetups.deleteAMeetup(id);
+		// }
 
 		dispatch('save');
 	};
@@ -59,11 +32,13 @@
 
 <article>
 	<header>
-		{#if createrId === $authReducer.user?.id}
+		{#if meetup.createrId === $page.data.user?.id}
 			<span class="edit"
 				><svg
-					on:keydown={() => dispatch('edit-meetup', { id })}
-					on:click={() => dispatch('edit-meetup', { id })}
+					role="button"
+					tabindex="0"
+					on:keydown={() => dispatch('edit-meetup', { currentMeetup: meetup })}
+					on:click={() => dispatch('edit-meetup', { currentMeetup: meetup })}
 					width="24"
 					height="24"
 					xmlns="http://www.w3.org/2000/svg"
@@ -73,6 +48,8 @@
 					/></svg
 				>
 				<svg
+					role="button"
+					tabindex="1"
 					on:click={deleteHandler}
 					on:keydown={deleteHandler}
 					width="24"
@@ -88,22 +65,22 @@
 		{/if}
 
 		<h1>
-			{title}
-			{#if isFavorite}
+			{meetup.title}
+			{#if meetup.isFavorite}
 				<Badge>FAVORITE</Badge>
 			{/if}
 		</h1>
-		<h2>{subtitle}</h2>
-		<h1>{address}</h1>
+		<h2>{meetup.subtitle}</h2>
+		<h1>{meetup.address}</h1>
 	</header>
 	<div class="image">
-		<img src={`${imageUrl}`} alt={title} />
+		<img src={`${meetup.imageUrl}`} alt={meetup.title} />
 	</div>
 	<div class="content">
-		<p>{description}</p>
+		<p>{meetup.description}</p>
 	</div>
 	<footer>
-		<Button href="mailto:{email}"
+		<Button href="mailto:{``}"
 			><svg
 				fill="white"
 				width="20"
@@ -116,13 +93,13 @@
 			></Button
 		>
 		<Button
-			mode="outline"
+			mode="btn-error-outline"
 			on:click={() => {
-				dispatch('show-details', { id });
+				dispatch('show-details', { currentMeetup: meetup });
 			}}
 		>
 			<svg
-				fill="#e40763"
+				fill="currentColor"
 				width="15"
 				height="15"
 				xmlns="http://www.w3.org/2000/svg"
@@ -132,10 +109,14 @@
 				/></svg
 			>
 		</Button>
-		<Button color={isFavorite ? null : 'success'} on:click={favoriteHandler}>
-			{#if !isFavorite}
+		<Button
+			mode="btn-primary-outline"
+			color={meetup.isFavorite ? null : 'success'}
+			on:click={favoriteHandler}
+		>
+			{#if !meetup.isFavorite}
 				<svg
-					fill="white"
+					fill="currentColor"
 					width="20"
 					height="20"
 					xmlns="http://www.w3.org/2000/svg"
