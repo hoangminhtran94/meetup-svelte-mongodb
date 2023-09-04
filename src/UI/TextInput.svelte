@@ -10,7 +10,7 @@
 	const dispatch = createEventDispatcher();
 	export let validityMessage: string = '';
 	export let validCondition: ((input: string) => boolean) | null = null;
-	let currentValue = '';
+	let currentValue = value;
 	let touched = false;
 	$: valid = validCondition ? validCondition(currentValue) : true;
 	onMount(() => {

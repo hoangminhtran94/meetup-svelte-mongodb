@@ -1,6 +1,6 @@
 <script lang="ts">
 	import MeetupGrid from '../../Meetup/MeetupGrid.svelte';
-	import EditMeetup from '../../Meetup/EditMeetup.svelte';
+	import MeetupForm from '../../Meetup/MeetupForm.svelte';
 	import Button from '../../UI/Button.svelte';
 	import type { PageData } from './$types';
 	import MeetupDetail from '../../Meetup/MeetupDetail.svelte';
@@ -85,7 +85,7 @@
 	{/if}
 
 	{#if editMode === 'add'}
-		<EditMeetup
+		<MeetupForm
 			on:save={() => {
 				editMode = null;
 			}}
@@ -95,7 +95,7 @@
 		/>
 	{/if}
 	{#if editMode === 'edit'}
-		<EditMeetup
+		<MeetupForm
 			meetup={currentSelected}
 			on:save={() => {
 				editMode = null;

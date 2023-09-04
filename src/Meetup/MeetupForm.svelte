@@ -7,6 +7,7 @@
 	import { notEmpty } from '../helpers/validation';
 	import ImageInput from '../UI/ImageInput.svelte';
 	import { enhance } from '$app/forms';
+	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	const dispatch = createEventDispatcher();
 	export let meetup: Meetup | null = null;
 	let formValid = {};
@@ -17,7 +18,22 @@
 </script>
 
 <Modal title="Add new meetup" on:cancel>
-	<form class="flex flex-col gap-5" use:enhance method="post" slot="modal-content">
+	<form
+		class="flex flex-col gap-5"
+		use:enhance={() => {
+			return async ({ result }) => {
+				if (result.type === 'success') {
+					await invalidateAll();
+					dispatch('cancel');
+				}
+			};
+		}}
+		method="post"
+		action={meetup ? '?/edit' : '?/create'}
+		slot="modal-content"
+	>
+		<input type="hidden" value={meetup?.id} name="id" />
+		<input type="hidden" value={meetup?.createrId} name="createrId" />
 		<ImageInput defaultImage={meetup?.imageUrl} name="meetupImage" />
 		<TextInput
 			value={meetup?.title}
@@ -59,7 +75,7 @@
 					dispatch('cancel');
 				}}>Cancel</Button
 			>
-			<Button {disabled} type="submit" mode="btn-success">Save</Button>
+			<Button {disabled} type="submit" mode="btn-success">{meetup ? 'Save' : 'Submit'}</Button>
 		</div>
 	</form>
 </Modal>

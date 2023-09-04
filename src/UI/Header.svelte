@@ -45,22 +45,29 @@
 			Meetups</NavLink
 		>
 		{#if $page.data.user}
+			<NavLink className="text-xs flex items-center gap-2 justify-center " href="#">Inbox</NavLink>
+			<NavLink className="text-xs flex items-center gap-2 justify-center " href="#"
+				>Notification</NavLink
+			>
+			<NavLink className="text-xs flex items-center gap-2 justify-center " href="#"
+				>Calendar</NavLink
+			>
 			<NavLink className="text-xs flex items-center gap-2 " href="/your-profile">
 				<div class="w-[30px] h-[30px]">
 					<img
 						width="30"
 						height="30"
 						class="w-full h-full object-cover rounded-full"
-						alt="profile-image"
+						alt="profileImage"
 						src={$page.data.user.profileImage}
 					/>
 				</div>
 				Profile
 			</NavLink>
-			<span
-				class="text-white flex items-center cursor-pointer"
+			<button
+				class="text-white flex items-center cursor-pointer text-xs hover:scale-105 transition-all"
 				on:click={logoutHandler}
-				on:keydown={logoutHandler}>Logout</span
+				on:keydown={logoutHandler}>Logout</button
 			>
 		{:else}
 			<NavLink href="/login">Login</NavLink>
